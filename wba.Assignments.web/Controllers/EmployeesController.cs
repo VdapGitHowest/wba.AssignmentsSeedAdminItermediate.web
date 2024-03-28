@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using wba.Assignments.core.entities;
 using wba.Assignments.web.Data;
@@ -43,6 +44,7 @@ namespace wba.Assignments.web.Controllers
             //fetch data from DBcontext instance
             //use Linq
             var employee = _assignmentDBContext.Employees
+                .Include(e=>e.AssignedProjects)
                 .FirstOrDefault(e => e.Id == id);
 
             //map data to viewmodel
@@ -53,9 +55,16 @@ namespace wba.Assignments.web.Controllers
                     Id = employee.Id,
                     Department = employee.Department,
                     Position = employee.Position,
-                    Name = employee.Name
+                    Name = employee.Name,
+                    //list the assigned projects of the selected employee
+                    AssignedProjects = employee.AssignedProjects.Select(
+                        assignedProject=> new ProjectDetailViewModel 
+                        {
+                            Name= assignedProject.Name,
+                            StartDate = assignedProject.StartDate,
+                            Id = assignedProject.Id
+                        }).ToList()
                 };
-
 
             return View(employeeDetailsViewModel);
         }
@@ -94,7 +103,7 @@ namespace wba.Assignments.web.Controllers
 
         public IActionResult Delete(int id)
         {
-            
+
             try
             {
 
@@ -118,6 +127,52 @@ namespace wba.Assignments.web.Controllers
             return RedirectToAction("Index");
         }
 
+
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+            //instance of employee to update
+            //data of employee needed, because
+            //form fiels must be filled in.
+
+            Employee employee = _assignmentDBContext.Employees
+                .FirstOrDefault(e => e.Id == id);
+
+            EmployeeUpdateViewModel employeeUpdateViewModel = new EmployeeUpdateViewModel
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                Department = employee.Department,
+                Position = employee.Position
+            };
+
+
+            return View(employeeUpdateViewModel);
+
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public IActionResult Update(EmployeeUpdateViewModel employeeUpdateViewModel)
+        {
+            //fetch the data on Employee ID
+            //use the Id in the viewmodel as value for the id-field
+
+            var updateEmployee = _assignmentDBContext.Employees
+                .FirstOrDefault(e => e.Id == employeeUpdateViewModel.Id);
+            //Update prop (postion, department) with new values out of viewmodel
+
+            if (updateEmployee != null)
+            {
+                updateEmployee.Department = employeeUpdateViewModel.Department;
+                updateEmployee.Position = employeeUpdateViewModel.Position;
+            }
+
+            //update database
+            _assignmentDBContext.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
 
 
     }

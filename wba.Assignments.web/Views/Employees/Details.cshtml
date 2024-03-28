@@ -7,15 +7,30 @@
         <h5 class="card-title">@Model.Name</h5>
         <h6 class="card-subtitle mb-2 text-muted">Position: @Model.Position</h6>
         <p class="card-text">Department: @Model.Department</p>
+        <h5>Assigned Projects</h5>
+        @if (Model.AssignedProjects.Count == 0)
+        {
+            <p class="text-danger">No assigned projects</p>
+        }
+        else
+        {
+            <ul>
+
+                @foreach (ProjectDetailViewModel projectViewModel in @Model.AssignedProjects)
+                {
+                    <li>@projectViewModel.Name <br /> (start: @projectViewModel.StartDate.ToShortDateString())</li>
+                }
+
+            </ul>
+        }
     </div>
     <div>
-        <a asp-action="Update" asp-controller="Employees"  class="btn btn-success float-end" asp-route-id="@Model.Id">Update</a>
+        <a asp-action="Update" asp-controller="Employees" class="btn btn-success float-end" asp-route-id="@Model.Id">Update</a>
         <a asp-action="Delete" asp-controller="Employees" class="btn btn-danger float-end" asp-route-id="@Model.Id">Delete</a>
     </div>
 </div>
 
 
-    
 
 
 <a asp-action="Index" asp-controller="Employees" class="btn btn-dark">Back to list</a>
