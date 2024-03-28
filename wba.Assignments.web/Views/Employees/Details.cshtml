@@ -9,7 +9,7 @@
         <p class="card-text">Department: @Model.Department</p>
     </div>
     <div>
-        <a asp-action="Update" asp-controller="Employees"  class="btn btn-success float-end">Update</a>
+        <a asp-action="Update" asp-controller="Employees"  class="btn btn-success float-end" asp-route-id="@Model.Id">Update</a>
         <a asp-action="Delete" asp-controller="Employees" class="btn btn-danger float-end" asp-route-id="@Model.Id">Delete</a>
     </div>
 </div>

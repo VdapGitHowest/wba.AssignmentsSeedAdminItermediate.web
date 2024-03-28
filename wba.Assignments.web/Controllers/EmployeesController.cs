@@ -11,7 +11,7 @@ namespace wba.Assignments.web.Controllers
 
         AssignmentDBContext _assignmentDBContext;
 
-        public EmployeesController( AssignmentDBContext assignmentDBContext)
+        public EmployeesController(AssignmentDBContext assignmentDBContext)
         {
             _assignmentDBContext = assignmentDBContext;
 
@@ -19,7 +19,7 @@ namespace wba.Assignments.web.Controllers
 
         public IActionResult Index()
         {
-       var employees = _assignmentDBContext.Employees.ToList();
+            var employees = _assignmentDBContext.Employees.ToList();
 
             EmployeeIndexViewModel employeeIndexViewModel = new EmployeeIndexViewModel
             {
@@ -37,7 +37,7 @@ namespace wba.Assignments.web.Controllers
             return View(employeeIndexViewModel);
         }
 
-                public IActionResult Details(int id)
+        public IActionResult Details(int id)
         {
             //1 employee (selected by id)
             //fetch data from DBcontext instance
@@ -56,7 +56,7 @@ namespace wba.Assignments.web.Controllers
                     Name = employee.Name
                 };
 
-           
+
             return View(employeeDetailsViewModel);
         }
 
@@ -80,7 +80,7 @@ namespace wba.Assignments.web.Controllers
                 Name = employeeAddViewModel.Name,
                 Department = employeeAddViewModel.Department,
                 Position = employeeAddViewModel.Position,
-                
+
 
             };
             //update the dbContext with the ne object
@@ -94,18 +94,31 @@ namespace wba.Assignments.web.Controllers
 
         public IActionResult Delete(int id)
         {
-            //fetch the to delete empoyee
+            
+            try
+            {
 
-            Employee employee = _assignmentDBContext.Employees
-                .FirstOrDefault(e=>e.Id == id);
+                //fetch the to delete employee
+                //use the value of parameter id
+                Employee employee = _assignmentDBContext.Employees
+                    .FirstOrDefault(e => e.Id == id);
 
-            //Remove this object from the DBcontext
-            _assignmentDBContext.Employees.Remove(employee);
-            //update the database with the new dbContext changes
-            _assignmentDBContext.SaveChanges();
+                //Remove from Dbcontext
+                _assignmentDBContext.Employees.Remove(employee);
+
+                //update the Dbase
+                _assignmentDBContext.SaveChanges();
+            }
+            catch
+            {
+                return View("Error");
+            }
+
 
             return RedirectToAction("Index");
         }
+
+
 
     }
 }
