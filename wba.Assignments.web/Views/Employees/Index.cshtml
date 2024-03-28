@@ -1,0 +1,33 @@
+﻿@model EmployeeIndexViewModel
+
+<header>
+    <h1>List of employees</h1>
+
+    <a asp-action="Add" asp-controller="Employees" class="btn btn-outline-success">Add new Employee</a>
+</header>
+
+<div class="container">
+    <div class="row">
+
+        @foreach (EmployeeDetailsViewModel employee in Model.Employees)
+        {
+            <div class="card" style="width: 25rem;">
+                <!--tips: add .text-center,.text-right to the .card to change card text alignment-->
+                <img src="~/assets/profile-circle.svg" class="card-img-top" alt="profile">
+                <div class="card-body">
+                    <h5 class="card-title">@employee.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Position: @employee.Position</h6>
+                    <p class="card-text">Department: @employee.Department</p>
+                    <a asp-action="Details" asp-controller="Employees" asp-route-id="@employee.Id" 
+                       class="btn btn-outline-info">Details</a>
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+

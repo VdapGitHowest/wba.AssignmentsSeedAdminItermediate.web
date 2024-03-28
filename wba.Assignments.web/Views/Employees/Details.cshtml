@@ -1,0 +1,21 @@
+﻿@model EmployeeDetailsViewModel
+
+<div class="card" style="width: 25rem;">
+    <!--tips: add .text-center,.text-right to the .card to change card text alignment-->
+    <img src="~/assets/profile-circle.svg" class="card-img-top" alt="profile">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Position: @Model.Position</h6>
+        <p class="card-text">Department: @Model.Department</p>
+    </div>
+    <div>
+        <a asp-action="Update" asp-controller="Employees"  class="btn btn-success float-end">Update</a>
+        <a asp-action="Delete" asp-controller="Employees" class="btn btn-danger float-end" asp-route-id="@Model.Id">Delete</a>
+    </div>
+</div>
+
+
+    
+
+
+<a asp-action="Index" asp-controller="Employees" class="btn btn-dark">Back to list</a>
